@@ -96,6 +96,15 @@ class TransactionManager(object):
     def registerSynch(self, synch):
         """ See ITransactionManager.
         """
+        import threading
+        # if threading.currentThread().getName() == 'Dummy-1':
+        #     from pdb import set_trace; set_trace()
+        print '\n\x1b[1;33;40m' + \
+            'registerSynch: ' + str(synch) + \
+            ' id: ' + str(id(synch)) + \
+            ' thread:' + threading.currentThread().getName() + \
+            '\n' + 'synchs before register: ' + \
+            str([ref() for ref in self._synchs.as_weakref_list()]) + '\x1b[0m \n'
         self._synchs.add(synch)
         if self._txn is not None:
             synch.newTransaction(self._txn)
@@ -103,6 +112,17 @@ class TransactionManager(object):
     def unregisterSynch(self, synch):
         """ See ITransactionManager.
         """
+        import threading
+        # if threading.currentThread().getName() == 'Dummy-1':
+        #     from pdb import set_trace; set_trace()
+        print '\n\x1b[1;33;40m' + \
+            'unregisterSynch: ' + str(synch) + \
+            ' id: ' + str(id(synch)) + \
+            ' thread:' + threading.currentThread().getName() + \
+            '\n' + 'synchs before unregister: ' + \
+            str([ref() for ref in self._synchs.as_weakref_list()]) + '\x1b[0m \n'
+        if synch not in self._synchs:
+            from pdb import set_trace; set_trace()
         self._synchs.remove(synch)
 
     def clearSynchs(self):
